@@ -18,10 +18,6 @@ RUN touch database/database.sqlite
 
 RUN composer install --no-dev --optimize-autoloader
 
-# Generate app key and run migrations
-RUN php artisan key:generate
-RUN php artisan migrate --force
-
 EXPOSE 8000
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
