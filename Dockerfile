@@ -13,5 +13,5 @@ RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 10000
 
-# Simple - just start the server
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Run migrations (continue even if some fail)
+CMD ["sh", "-c", "php artisan migrate --force || true && php artisan serve --host=0.0.0.0 --port=10000"]
