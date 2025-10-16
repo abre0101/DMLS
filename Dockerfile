@@ -13,5 +13,5 @@ RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 10000
 
-# Create migration table if needed, then run migrations
-CMD ["sh", "-c", "php artisan migrate:install --force && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=10000"]
+# Correct migration commands
+CMD ["sh", "-c", "php artisan migrate:install && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=10000"]
