@@ -1,34 +1,30 @@
 #!/bin/bash
 
-set -e  # Exit on any error
+set -e
 
-echo "Starting application setup..."
+echo "Starting application deployment..."
 
-# Wait for database to be ready
-echo "Waiting for database..."
-sleep 10
-
-# Generate application key if not set
+# Create .env if it doesn't exist
 if [ ! -f .env ]; then
+    echo "Creating .env file from .env.example"
     cp .env.example .env
 fi
 
-if [ -z "$(grep '^APP_KEY=..*' .env)" ] || [ "$(grep '^APP_KEY=..*' .env)" = "APP_KEY=" ]; then
+# Generate app key if not set
+if ! grep -q '^APP_KEY=..*' .env; then
     echo "Generating application key..."
     php artisan key:generate --force
 fi
 
-# Cache configuration
-echo "Caching configuration..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+# Cache configuration (optional - can be removed if causing issues)
+php artisan config:cache || true
+php artisan route:cache || true
+php artisan view:cache || true
 
-# Run database migrations
+# Run migrations
 echo "Running database migrations..."
 php artisan migrate --force
 
-# Start services
-echo "Starting PHP-FPM and Nginx..."
+echo "Starting server..."
 php-fpm -D
 nginx -g 'daemon off;'
