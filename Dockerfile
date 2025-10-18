@@ -4,47 +4,45 @@ WORKDIR /var/www
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    zip \
-    unzip \
     libpq-dev \
-    nginx
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    nginx \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy application files
-COPY . .
+# Copy only necessary files first
+COPY composer.json composer.lock ./
 
-# Copy nginx configuration
-COPY docker/nginx.conf /etc/nginx/sites-available/default
+# Install dependencies (no autoloader optimization yet)
+RUN composer install --no-dev --no-scripts --no-autoloader
+
+# Copy the rest of the application
+COPY . .
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Now run composer scripts
+RUN composer dump-autoload --optimize
 
-# Create .env if it doesn't exist
+# Copy nginx configuration
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+
+# Create .env from example if it doesn't exist (without running artisan)
 RUN if [ ! -f .env ]; then \
         cp .env.example .env; \
+        echo "APP_KEY=" >> .env; \
     fi
-
-# Cache configuration
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
 
 EXPOSE 8000
 
