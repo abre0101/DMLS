@@ -2,12 +2,12 @@
 
 set -e
 
-echo "Starting application deployment..."
+echo "Starting application setup..."
 
 # Create .env if it doesn't exist
 if [ ! -f .env ]; then
-    echo "Creating .env file from .env.example"
     cp .env.example .env
+    echo "Created .env file from .env.example"
 fi
 
 # Generate app key if not set
@@ -16,15 +16,24 @@ if ! grep -q '^APP_KEY=..*' .env; then
     php artisan key:generate --force
 fi
 
-# Cache configuration (optional - can be removed if causing issues)
-php artisan config:cache || true
-php artisan route:cache || true
-php artisan view:cache || true
+# Run package discovery
+echo "Running package discovery..."
+php artisan package:discover --ansi
+
+# Cache configuration
+echo "Caching configuration..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 # Run migrations
 echo "Running database migrations..."
 php artisan migrate --force
 
-echo "Starting server..."
+# Create storage links if needed
+echo "Creating storage links..."
+php artisan storage:link || true
+
+echo "Starting PHP-FPM and Nginx..."
 php-fpm -D
 nginx -g 'daemon off;'
