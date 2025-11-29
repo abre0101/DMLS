@@ -7,60 +7,277 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## About This Project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A comprehensive Document Management and Letter System (DMLS) built with Laravel 12, designed to streamline document workflows, approval processes, and internal correspondence management for organizations.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Key Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Document Management
+- Upload, version, and track documents with metadata
+- Document categorization and tagging
+- Version control with restore capabilities
+- Soft delete and document archiving
+- OCR support via Tesseract for text extraction
+- PDF generation and manipulation (FPDF, FPDI, DomPDF)
+- Document collaboration with multiple users
+- Comments and activity logging
 
-## Learning Laravel
+### Workflow & Approvals
+- Multi-level approval hierarchies (Employee → Manager → Director)
+- Customizable workflow steps with role-based approvals
+- Digital signature support for approvals
+- Approval request tracking and notifications
+- Automatic workflow creation on document upload
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Letter Management
+- Internal letter composition and routing
+- Letter templates with department-specific customization
+- Inbox/Outbox for incoming and outgoing correspondence
+- Letter threading (replies and conversations)
+- PDF export for letters
+- Email integration for external correspondence
+- Read/unread status tracking
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Role-Based Access Control
+- Spatie Laravel Permission integration
+- Four primary roles: Admin, Director, Manager, Employee
+- Custom role creation and permission assignment
+- Department-based access restrictions
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Task Management
+- Task creation and assignment
+- Due date tracking with overdue alerts
+- Task status updates and completion tracking
+- Manager and Director task oversight
 
-## Laravel Sponsors
+### Reporting & Analytics
+- Weekly and monthly reports
+- Department activity tracking
+- Document approval statistics
+- Export reports in multiple formats
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Additional Features
+- Real-time notifications
+- Health monitoring (Spatie Laravel Health)
+- Activity and access logging
+- Profile management
+- System settings configuration
 
-### Premium Partners
+## Tech Stack
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- Laravel 12.x
+- PHP 8.2+
+- Livewire 3.6 for reactive components
+- Laravel Breeze for authentication
+- Tailwind CSS 3.x with Alpine.js
+- MySQL database
+- Vite for asset bundling
+
+### Key Packages
+- `spatie/laravel-permission` - Role and permission management
+- `spatie/laravel-health` - Application health monitoring
+- `barryvdh/laravel-dompdf` - PDF generation
+- `intervention/image` - Image processing
+- `phpoffice/phpword` - Word document handling
+- `thiagoalessio/tesseract_ocr` - OCR text extraction
+- `laravel/sanctum` - API authentication
+
+## Installation
+
+### Prerequisites
+- PHP 8.2 or higher
+- Composer
+- Node.js & NPM
+- MySQL 5.7+ or MariaDB
+- Tesseract OCR (optional, for OCR features)
+
+### Setup Steps
+
+1. Clone the repository
+```bash
+git clone <repository-url>
+cd <project-directory>
+```
+
+2. Install PHP dependencies
+```bash
+composer install
+```
+
+3. Install JavaScript dependencies
+```bash
+npm install
+```
+
+4. Environment configuration
+```bash
+cp .env.example .env
+```
+
+5. Configure your `.env` file with database credentials
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=dmls
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+6. Generate application key
+```bash
+php artisan key:generate
+```
+
+7. Run migrations
+```bash
+php artisan migrate
+```
+
+8. Seed the database (optional)
+```bash
+php artisan db:seed
+```
+
+9. Create storage symlink
+```bash
+php artisan storage:link
+```
+
+10. Build frontend assets
+```bash
+npm run build
+```
+
+## Running the Application
+
+### Development Mode
+
+Run all services concurrently (server, queue, and Vite):
+```bash
+composer dev
+```
+
+Or run services individually:
+```bash
+# Terminal 1 - Application server
+php artisan serve
+
+# Terminal 2 - Queue worker
+php artisan queue:listen
+
+# Terminal 3 - Vite dev server
+npm run dev
+```
+
+### Production Mode
+```bash
+npm run build
+php artisan serve
+```
+
+## User Roles & Access
+
+### Admin
+- Full system access
+- User management
+- Role and permission assignment
+- System configuration
+
+### Director
+- Approve/reject documents requiring director-level approval
+- View all department activities
+- Create and assign tasks
+- Generate reports
+- Manage letters
+
+### Manager
+- Approve/reject documents from employees
+- Create and manage letter templates
+- Send internal and external letters
+- Assign tasks to employees
+- View department documents and reports
+
+### Employee
+- Upload and manage documents
+- Request approvals
+- View assigned tasks
+- Send and receive letters
+- Collaborate on documents
+
+## Testing
+
+Run the test suite using Pest:
+```bash
+php artisan test
+```
+
+Or with coverage:
+```bash
+php artisan test --coverage
+```
+
+## Code Quality
+
+Format code with Laravel Pint:
+```bash
+./vendor/bin/pint
+```
+
+## Project Structure
+
+```
+app/
+├── Console/         # Artisan commands
+├── Events/          # Event classes
+├── Http/
+│   ├── Controllers/ # Application controllers
+│   └── Middleware/  # Custom middleware
+├── Jobs/            # Queue jobs
+├── Mail/            # Mailable classes
+├── Models/          # Eloquent models
+├── Notifications/   # Notification classes
+├── Policies/        # Authorization policies
+└── Providers/       # Service providers
+
+database/
+├── migrations/      # Database migrations
+├── seeders/         # Database seeders
+└── factories/       # Model factories
+
+resources/
+├── views/           # Blade templates
+├── js/              # JavaScript files
+└── css/             # Stylesheets
+
+routes/
+├── web.php          # Web routes
+├── api.php          # API routes
+└── console.php      # Console routes
+```
+
+## Configuration
+
+Key configuration files:
+- `config/permission.php` - Role and permission settings
+- `config/filesystems.php` - File storage configuration
+- `config/queue.php` - Queue driver settings
+- `config/mail.php` - Email configuration
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Contributions are welcome! Please follow these guidelines:
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes with clear messages
+4. Write or update tests as needed
+5. Submit a pull request
 
-## Code of Conduct
+## Security
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover any security vulnerabilities, please report them immediately to the development team.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the MIT license.
