@@ -1,0 +1,134 @@
+/* Default to light mode styles */
+body.light-mode {
+    background-color: #f8f9fa; /* Light background */
+    color: #212529; /* Dark text */
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0; /* Light text for contrast */
+}
+
+/* Navbar Styles for Light Mode */
+body.light-mode .navbar {
+    background-color: #ffffff; /* Light navbar */
+    color: #333; /* Dark text */
+}
+
+body.light-mode .navbar a.nav-link {
+    color: #007bff; /* Default link color */
+}
+
+/* Navbar Styles for Dark Mode */
+body.dark-mode .navbar {
+    background-color: #333; /* Dark navbar */
+    color: #e0e0e0; /* Light text */
+}
+
+body.dark-mode .navbar a.nav-link {
+    color: #80d3ff; /* Light blue for links in dark mode */
+}
+
+/* Button Styles for Light Mode */
+body.light-mode .btn {
+    background-color: #007bff; /* Blue button */
+    color: #ffffff;
+}
+
+body.light-mode .btn:hover {
+    background-color: #0056b3; /* Darker blue on hover - fixed typo */
+}
+
+/* Button Styles for Dark Mode */
+body.dark-mode .btn {
+    background-color: #444; /* Dark button */
+    color: #e0e0e0;
+}
+
+body.dark-mode .btn:hover {
+    background-color: #666; /* Lighter gray on hover */
+}
+
+/* Card Styles for Light Mode */
+body.light-mode .card {
+    background-color: #ffffff;
+    border-color: #ddd;
+    color: #212529;
+}
+
+body.light-mode .card-title {
+    color: #007bff;
+}
+
+/* Card Styles for Dark Mode */
+body.dark-mode .card {
+    background-color: #333;
+    border-color: #555;
+    color: #e0e0e0;
+}
+
+body.dark-mode .card-title {
+    color: #80d3ff;
+}
+
+/* Input and Form Control Styles for Light Mode */
+body.light-mode .form-control {
+    background-color: #ffffff;
+    color: #495057;
+    border-color: #ced4da;
+}
+
+/* Input and Form Control Styles for Dark Mode */
+body.dark-mode .form-control {
+    background-color: #444;
+    color: #e0e0e0;
+    border-color: #666;
+}
+
+/* Link Styles for Light Mode */
+body.light-mode a {
+    color: #007bff; /* Default link color */
+}
+
+body.light-mode a:hover {
+    color: #0056b3; /* Darker on hover */
+}
+
+/* Link Styles for Dark Mode */
+body.dark-mode a {
+    color: #80d3ff; /* Light blue links */
+}
+
+body.dark-mode a:hover {
+    color: #ffffff; /* White on hover */
+}
+
+/* Theme Toggle Button */
+#themeToggle {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer; /* Add pointer cursor */
+    padding: 0.375rem 0.75rem; /* Bootstrap-like padding */
+    border-radius: 0.25rem; /* Rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#themeToggle:hover {
+    background-color: #0056b3;
+}
+
+#themeToggle i {
+    font-size: 1.4rem;
+}
+
+/* Smooth transition for theme switching */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar, .btn, .card, .form-control, a {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}

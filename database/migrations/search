@@ -1,0 +1,130 @@
+To implement the admin.pendingApprovals, admin.notifications, and admin.systemHealth functionalities in your Laravel application, you can follow these guidelines:
+
+1. admin.pendingApprovals
+This feature retrieves documents that are pending approval. You can create a controller method to fetch these documents:
+
+php
+Copy
+Edit
+public function pendingApprovals()
+{
+    $pendingDocuments = Document::where('status', 'pending')
+        ->where('category_id', '!=', null) // Ensure category exists
+        ->latest()
+        ->paginate(10);
+
+    return view('admin.pending_approvals', compact('pendingDocuments'));
+}
+In your Blade view (admin/pending_approvals.blade.php), you can display the list of pending documents:
+
+blade
+Copy
+Edit
+@foreach ($pendingDocuments as $document)
+    <p>{{ $document->title }} - {{ $document->created_at->diffForHumans() }}</p>
+@endforeach
+
+{{ $pendingDocuments->links() }}
+2. admin.notifications
+To manage notifications, you can utilize Laravel's built-in notification system. First, create a notification:
+
+bash
+Copy
+Edit
+php artisan make:notification DocumentApproved
+In the generated notification class (app/Notifications/DocumentApproved.php), define the toMail method:
+
+php
+Copy
+Edit
+public function toMail($notifiable)
+{
+    return (new MailMessage)
+        ->subject('Document Approved')
+        ->line('Your document has been approved.')
+        ->action('View Document', url('/documents/' . $this->document->id));
+}
+To send this notification:
+
+php
+Copy
+Edit
+use App\Notifications\DocumentApproved;
+
+public function approveDocument(Document $document)
+{
+    $document->update(['status' => 'approved']);
+    $document->user->notify(new DocumentApproved($document));
+
+    return redirect()->route('admin.pendingApprovals');
+}
+To display notifications in the admin panel, you can use Laravel's notification system:
+
+php
+Copy
+Edit
+use Illuminate\Support\Facades\Notification;
+
+public function showNotifications()
+{
+    $notifications = Auth::user()->notifications()->latest()->paginate(10);
+
+    return view('admin.notifications', compact('notifications'));
+}
+In your Blade view (admin/notifications.blade.php):
+
+blade
+Copy
+Edit
+@foreach ($notifications as $notification)
+    <p>{{ $notification->data['message'] }} - {{ $notification->created_at->diffForHumans() }}</p>
+@endforeach
+
+{{ $notifications->links() }}
+3. admin.systemHealth
+To monitor system health, you can use Laravel's built-in health checks. First, install the spatie/laravel-health package:
+
+bash
+Copy
+Edit
+composer require spatie/laravel-health
+Publish the configuration:
+
+bash
+Copy
+Edit
+php artisan vendor:publish --provider="Spatie\Health\HealthServiceProvider"
+Configure your health checks in config/health.php. For example:
+
+php
+Copy
+Edit
+return [
+    'checks' => [
+        'database' => \Spatie\Health\Checks\DatabaseCheck::new(),
+        'disk_space' => \Spatie\Health\Checks\DiskSpaceCheck::new(),
+        // Add other checks as needed
+    ],
+];
+To display the health status in the admin panel:
+
+php
+Copy
+Edit
+use Spatie\Health\Facades\Health;
+
+public function systemHealth()
+{
+    $status = Health::check();
+
+    return view('admin.system_health', compact('status'));
+}
+In your Blade view (admin/system_health.blade.php):
+
+blade
+Copy
+Edit
+@foreach ($status as $check => $result)
+    <p>{{ $check }}: {{ $result->status }}</p>
+@endforeach
+By implementing these methods, you can effectively manage pending document approvals, user notifications, and system health monitoring in your Laravel application.
